@@ -1,0 +1,186 @@
+[
+    {
+        "id": "2c4e7e12.a3130a",
+        "type": "tab",
+        "label": "Powersensor",
+        "disabled": false,
+        "info": ""
+    },
+    {
+        "id": "25eee1a0.c91a2e",
+        "type": "udp in",
+        "z": "2c4e7e12.a3130a",
+        "name": "Listen to power plug #1",
+        "iface": "",
+        "port": "6788",
+        "ipv": "udp4",
+        "multicast": "false",
+        "group": "",
+        "datatype": "utf8",
+        "x": 160,
+        "y": 240,
+        "wires": [
+            [
+                "48b21bab.48bc54"
+            ]
+        ]
+    },
+    {
+        "id": "4fe3fd00.dbca34",
+        "type": "udp out",
+        "z": "2c4e7e12.a3130a",
+        "name": "Connect to power plug #1",
+        "addr": "",
+        "iface": "",
+        "port": "49476",
+        "ipv": "udp4",
+        "outport": "6788",
+        "base64": false,
+        "multicast": "false",
+        "x": 510,
+        "y": 40,
+        "wires": []
+    },
+    {
+        "id": "a56a24bf.f06078",
+        "type": "inject",
+        "z": "2c4e7e12.a3130a",
+        "name": "Start powersensor capture",
+        "props": [
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "100",
+        "crontab": "",
+        "once": true,
+        "onceDelay": "0.1",
+        "topic": "",
+        "payload": "subscribe(180)",
+        "payloadType": "str",
+        "x": 210,
+        "y": 40,
+        "wires": [
+            [
+                "4fe3fd00.dbca34",
+                "525bbb0a.d7758c"
+            ]
+        ]
+    },
+    {
+        "id": "48b21bab.48bc54",
+        "type": "json",
+        "z": "2c4e7e12.a3130a",
+        "name": "Parse JSON",
+        "property": "payload",
+        "action": "obj",
+        "pretty": false,
+        "x": 430,
+        "y": 240,
+        "wires": [
+            [
+                "9a543784.ca7b2"
+            ]
+        ]
+    },
+    {
+        "id": "61cbd21c.cf021c",
+        "type": "mqtt out",
+        "z": "2c4e7e12.a3130a",
+        "name": "Send to MQTT",
+        "topic": "",
+        "qos": "",
+        "retain": "",
+        "respTopic": "",
+        "contentType": "",
+        "userProps": "",
+        "correl": "",
+        "expiry": "",
+        "broker": "1dc4d152.a977d7",
+        "x": 860,
+        "y": 240,
+        "wires": []
+    },
+    {
+        "id": "525bbb0a.d7758c",
+        "type": "udp out",
+        "z": "2c4e7e12.a3130a",
+        "name": "Connect to power plug #2",
+        "addr": "",
+        "iface": "",
+        "port": "49476",
+        "ipv": "udp4",
+        "outport": "6789",
+        "base64": false,
+        "multicast": "false",
+        "x": 510,
+        "y": 80,
+        "wires": []
+    },
+    {
+        "id": "c2daef2d.ab68c8",
+        "type": "udp in",
+        "z": "2c4e7e12.a3130a",
+        "name": "Listen to power plug #1",
+        "iface": "",
+        "port": "6789",
+        "ipv": "udp4",
+        "multicast": "false",
+        "group": "",
+        "datatype": "utf8",
+        "x": 160,
+        "y": 280,
+        "wires": [
+            [
+                "48b21bab.48bc54"
+            ]
+        ]
+    },
+    {
+        "id": "9a543784.ca7b2",
+        "type": "function",
+        "z": "2c4e7e12.a3130a",
+        "name": "Process message",
+        "func": "const sensorReading = msg.payload;\n//raw message that comes from the sensor UDP\nconst [type, subtype] = [sensorReading['type'], sensorReading['subtype']];\n\nif ( type === 'subscription') {\n    if (subtype === 'expiry') {\n        console.error('The socket stream has expired, exiting');\n    }\n    else if (subtype === 'warning') {\n        console.error('The socket stream had a subscription warning, resubscribing');\n    }\n} else if (type === 'instant_power') {\n    const unit = sensorReading.unit.toLowerCase();\n    let output = [];\n\n    //handle power first\n    let power = sensorReading.power;\n    if (unit === 'u') {\n        power = power / 19.3;\n    }\n    \n    output.push(\n    {\n        topic: `home/energy/sensor/${sensorReading.mac}/power`,\n        payload: Math.round(power)\n    });\n\n    //handle voltage message\n    if (sensorReading.voltage) {\n        output.push(\n            {\n                topic: `home/energy/sensor/${sensorReading.mac}/voltage`,\n                payload: sensorReading.voltage.toFixed(2)\n            });\n    }\n    return [output];\n}\nreturn null;\n",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 630,
+        "y": 240,
+        "wires": [
+            [
+                "61cbd21c.cf021c"
+            ]
+        ]
+    },
+    {
+        "id": "1dc4d152.a977d7",
+        "type": "mqtt-broker",
+        "name": "",
+        "broker": "localhost",
+        "port": "1883",
+        "clientid": "",
+        "usetls": false,
+        "protocolVersion": "4",
+        "keepalive": "60",
+        "cleansession": true,
+        "birthTopic": "",
+        "birthQos": "0",
+        "birthRetain": "false",
+        "birthPayload": "",
+        "birthMsg": {},
+        "closeTopic": "",
+        "closeQos": "0",
+        "closeRetain": "false",
+        "closePayload": "",
+        "closeMsg": {},
+        "willTopic": "",
+        "willQos": "0",
+        "willRetain": "false",
+        "willPayload": "",
+        "willMsg": {},
+        "sessionExpiry": ""
+    }
+]
