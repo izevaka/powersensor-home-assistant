@@ -98,3 +98,19 @@ homeassistant:
       state_class: total_increasing
       friendly_name: Total Household Energy
 ```
+
+## Util
+The optional `capture-sensor` utility allows direct connection to the sensor for debugging and troubleshoting purposes. This is a node.js program with a straight forward interface.
+
+```
+ᐅ node capture-sensor.mjs
+Host argument required
+Usage: node capture.sensor.mjs [--raw] host [port|49476]
+```
+
+By default, the utility outputs MQTT messages that the Node-RED flow outputs. Specifying `--raw` will switch to outputing raw JSON as it comes out from the plug. In raw mode, the protocol messages are supressed.
+
+ ## Limitations
+ The Node-RED flow is pretty fragile, I don't really trust it, but it seems to perform OK so far, including surviving HA restarts.
+
+ If you reposition the sensor and press the sensor button to show the signal strength, the sensor power reading switches into a different mode, where the reported unit is `U`. What it is is a mystery to me. I suspect it's the raw EM reading from the sensor. I  fudged the multipler (approximately 20) to convert it back to watts by inspecting the output. This may be completely different in your set up. The sensor will stay in this mode for about 2 hours.
