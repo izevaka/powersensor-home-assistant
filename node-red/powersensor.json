@@ -56,7 +56,7 @@
         "once": true,
         "onceDelay": "0.1",
         "topic": "",
-        "payload": "subscribe(180)",
+        "payload": "\"subscribe(180)\\n\"",
         "payloadType": "str",
         "x": 210,
         "y": 40,

@@ -55,7 +55,7 @@ function main() {
 }
 
 function subscribe(s) {
-    s.send('subscribe(180)');
+    s.send('subscribe(180)\n');
 }
 function closeAndExit(s) {
     s.close();
