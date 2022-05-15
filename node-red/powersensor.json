@@ -57,7 +57,7 @@
         "onceDelay": "0.1",
         "topic": "",
         "payload": "\"subscribe(180)\\n\"",
-        "payloadType": "str",
+        "payloadType": "jsonata",
         "x": 210,
         "y": 40,
         "wires": [
