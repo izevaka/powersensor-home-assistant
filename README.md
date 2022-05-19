@@ -35,7 +35,7 @@ Minimal set-up with one sensor and one plug will produce four readings:
 * Sensor power
 * Sensor battery voltage
 
-The sensor does not have voltage as it's not hard-wired into the circuit.
+The sensor does not have voltage as it's not hard-wired into the circuit. However the sensor has its own battery voltage level.
 
 ## Set-up
 First of all, you need to figure out the IP and MAC addresses for your sensors. You can get these from the Powersensor app.
