@@ -29,7 +29,7 @@ Node-RED flow will publish messages with voltage and power readings using the fo
 * `home/energy/sensor/MAC_ADDR/voltage`
 * `home/energy/sensor/MAC_ADDR/batteryVoltage`
 
-Minimal set-up with one sensor and one plug will produce three readings:
+Minimal set-up with one sensor and one plug will produce four readings:
 * Plug power
 * Plug voltage
 * Sensor power
