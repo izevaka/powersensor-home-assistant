@@ -27,13 +27,15 @@ Node-RED flow will publish messages with voltage and power readings using the fo
 
 * `home/energy/sensor/MAC_ADDR/power`
 * `home/energy/sensor/MAC_ADDR/voltage`
+* `home/energy/sensor/MAC_ADDR/batteryVoltage`
 
-Minimal set-up with one sensor and one plug will produce three readings:
+Minimal set-up with one sensor and one plug will produce four readings:
 * Plug power
 * Plug voltage
-* Sensor power  
+* Sensor power
+* Sensor battery voltage
 
-The sensor does not have voltage as it's not hard-wired into the circuit.
+The sensor does not have voltage as it's not hard-wired into the circuit. However the sensor has its own battery voltage level.
 
 ## Set-up
 First of all, you need to figure out the IP and MAC addresses for your sensors. You can get these from the Powersensor app.
@@ -68,6 +70,11 @@ sensor:
   - platform: mqtt
     state_topic: home/energy/sensor/MAC_ADDR/voltage
     name: plug_name_voltage
+    device_class: voltage
+    unit_of_measurement: V
+  - platform: mqtt
+    state_topic: home/energy/sensor/MAC_ADDR/batteryVoltage
+    name: main_powersensor_battery_voltage
     device_class: voltage
     unit_of_measurement: V
 homeassistant:
