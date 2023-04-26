@@ -63,45 +63,9 @@ Once the sensors are configured, you should be able to see the sensor reading in
 
 This configuration block creates power and voltage sensors from MQTT. The second section under `homeassistant/customize` allows customisation of friendly names, in case you want to use those directly in lovelace dashboards.
 
-### Home Assistant pre-2022.6
-
-This is the original MQTT sensor format. This is changing in HA 2022.6 and is deprecated in 2022.9. If your HA version is < 2022.6, use this sensor config template.
-
-```
-sensor:
-  - platform: mqtt
-    state_topic: home/energy/sensor/MAC_ADDR/power
-    name: plug_name_power
-    device_class: power
-    unit_of_measurement: W
-  - platform: mqtt
-    state_topic: home/energy/sensor/MAC_ADDR/power
-    name: main_powersensor_sensor
-    device_class: power
-    unit_of_measurement: W
-  - platform: mqtt
-    state_topic: home/energy/sensor/MAC_ADDR/voltage
-    name: plug_name_voltage
-    device_class: voltage
-    unit_of_measurement: V
-  - platform: mqtt
-    state_topic: home/energy/sensor/MAC_ADDR/batteryVoltage
-    name: main_powersensor_battery_voltage
-    device_class: voltage
-    unit_of_measurement: V
-homeassistant:
-  customize:
-    sensor.plug_name_power:
-      state_class: measurement
-      friendly_name: Friendly Plug Name
-    sensor.main_powersensor_sensor:
-      state_class: measurement
-      friendly_name: Total Household Power
-```
-
 ### Home Assistant 2022.6 onwards
 
-You might find that after upgrading Home Assistant or Visual Studio you are getting errors and warnings in your `configuration.yaml` to do with the MQTT sensors. If so, you need to use the below format to configure the power/voltage sensors.
+NOTE: If you are running a solar sensor as well, please refer to #6 for details on how to set up the Home Assistant sensors for the Energy dashboard.
 
 ```
 mqtt:
